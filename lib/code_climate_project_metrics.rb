@@ -2,7 +2,7 @@ require 'httparty'
 
 class CodeClimateProjectMetrics
   def initialize identifier
-    @identifier = identifier
+    @identifier = "github#{URI::parse(identifier).path}"
   end
 
   def image
@@ -11,8 +11,8 @@ class CodeClimateProjectMetrics
   end
 
   def scalar
-    response = HTTParty.get(gpa_badge_url)
+    response = HTTParty.get(image)
     stat_regex = /fill-opacity=".3">.*?fill-opacity=".3">([^<]+)/
-    response.body =~ stat_regex ? $1 : nil
+    (response.body =~ stat_regex ? $1 : nil).to_f
   end
 end
