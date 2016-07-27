@@ -1,0 +1,93 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://codeclimate.com/github/AgileVentures/LocalSupport/badges/gpa.svg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Disposition:
+      - inline; filename="code_climate-3-2.svg"
+      Content-Security-Policy:
+      - default-src 'self'; connect-src 'self' https://api.segment.io https://api2.segment.io
+        https://api.mixpanel.com; font-src 'self' https://dwv6i237vhjwj.cloudfront.net
+        data:; frame-src https://*.stripe.com https://platform.twitter.com https://www.youtube.com;
+        img-src 'self' https://ssl.google-analytics.com https://dwv6i237vhjwj.cloudfront.net
+        https://secure.adnxs.com https://pixel.prfct.co https://www.facebook.com https://secure.gravatar.com
+        https://www.gravatar.com https://analytics.twitter.com https://p.typekit.net
+        https://*.stripe.com https://avatars.githubusercontent.com/ data:; media-src
+        'self'; object-src 'self'; script-src 'self' https://*.stripe.com https://tag.perfectaudience.com
+        https://pixel-geo.prfct.co https://use.typekit.net https://platform.twitter.com
+        https://dwv6i237vhjwj.cloudfront.net https://d2dq2ahtl5zl1z.cloudfront.net
+        https://ssl.google-analytics.com https://d1ros97qkrwjf5.cloudfront.net https://beacon-1.newrelic.com;
+        style-src 'self' 'unsafe-inline' https://use.typekit.net https://dwv6i237vhjwj.cloudfront.net;
+        report-uri https://codeclimate.com/csp-reports;
+      Content-Transfer-Encoding:
+      - binary
+      Content-Type:
+      - image/svg+xml
+      Date:
+      - Wed, 27 Jul 2016 23:32:59 GMT
+      Etag:
+      - '"e86ec070fcdbba0ea99ab927c0791ab8"'
+      Server:
+      - nginx + Phusion Passenger 5.0.22
+      Set-Cookie:
+      - b_uuid=60ddeac036800134d6750242ac112a07; domain=.codeclimate.com; path=/;
+        expires=Sun, 27 Jul 2036 23:32:59 -0000
+      - seg=165; domain=.codeclimate.com; path=/; expires=Sun, 27 Jul 2036 23:32:59
+        -0000
+      Status:
+      - 200 OK
+      Strict-Transport-Security:
+      - max-age=631138519
+      Vary:
+      - Accept, X-Requested-With
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+      X-Powered-By:
+      - Phusion Passenger 5.0.22
+      X-Request-Id:
+      - bddd7ad1-636e-4755-a626-f084d5de1aa7
+      X-Revision:
+      - 76a72cc5b93c06c571157ce83615bff3b545937d
+      X-Runtime:
+      - '0.022047'
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '732'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '<svg xmlns="http://www.w3.org/2000/svg" width="110" height="20"><linearGradient
+        id="a" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop
+        offset="1" stop-opacity=".1"/></linearGradient><rect rx="3" width="110" height="20"
+        fill="#555"/><rect rx="3" x="82" width="28" height="20" fill="#97CA00"/><path
+        fill="#97CA00" d="M82 0h4v20h-4z"/><rect rx="3" width="110" height="20" fill="url(#a)"/><g
+        fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif"
+        font-size="11"><text x="42" y="15" fill="#010101" fill-opacity=".3">code climate</text><text
+        x="42" y="14">code climate</text><text x="95" y="15" fill="#010101" fill-opacity=".3">3.2</text><text
+        x="95" y="14">3.2</text></g></svg>
+
+'
+    http_version: 
+  recorded_at: Wed, 27 Jul 2016 23:32:59 GMT
+recorded_with: VCR 3.0.3
