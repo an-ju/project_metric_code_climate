@@ -15,6 +15,11 @@ class ProjectMetricCodeClimate
   def score
     stat_regex = /fill-opacity=".3">.*?fill-opacity=".3">([^<]+)/
     @raw_data ||= HTTParty.get(image).body
-    (@raw_data =~ stat_regex ? $1 : nil).to_f
+    @score ||= (@raw_data =~ stat_regex ? $1 : nil).to_f
+  end
+
+  def raw_data=(new)
+    @raw_data = new
+    @score = @image = nil
   end
 end
