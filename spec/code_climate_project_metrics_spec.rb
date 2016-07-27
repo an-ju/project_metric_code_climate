@@ -41,11 +41,16 @@ describe ProjectMetricCodeClimate do
       expect(code_climate_project_metrics.score).to eq 3.5
     end
 
+    it 'uses new network data of 3.5 after score has been computed once' do
+      expect(code_climate_project_metrics.score).to eq 3.2
+      expect(HTTParty).to receive(:get).with("https://codeclimate.com/github/AgileVentures/LocalSupport/badges/gpa.svg").and_return double("response",body: raw_data_three_point_five)
+      expect(code_climate_project_metrics.refresh).to be true
+      expect(code_climate_project_metrics.score).to eq 3.5
+    end
 
     context 'with raw data in initialize' do
 
       subject(:code_climate_project_metrics) do
-
         described_class.new({url: "http://github.com/AgileVentures/LocalSupport"},raw_data_three_point_five)
       end
 

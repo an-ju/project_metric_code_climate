@@ -22,4 +22,10 @@ class ProjectMetricCodeClimate
     @raw_data = new
     @score = @image = nil
   end
+
+  def refresh
+    @raw_data = HTTParty.get(image).body
+    @score = @image = nil
+    true
+  end
 end
