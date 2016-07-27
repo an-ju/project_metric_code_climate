@@ -1,6 +1,6 @@
 require 'httparty'
 
-class CodeClimateProjectMetrics
+class ProjectMetricCodeClimate
   def initialize identifier
     @identifier = "github#{URI::parse(identifier).path}"
   end

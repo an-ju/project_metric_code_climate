@@ -1,6 +1,6 @@
-require 'code_climate_project_metrics' 
+require 'project_metric_code_climate' 
 
-describe CodeClimateProjectMetrics do
+describe ProjectMetricCodeClimate do
   context 'AgileVentures/WebsiteOne repo' do
     subject(:code_climate_project_metrics) { described_class.new 'http://github.com/AgileVentures/WebsiteOne'}
 
