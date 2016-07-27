@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-# stub: code_climate_project_metrics 0.0.2 ruby lib
+# stub: code_climate_project_metrics 0.0.0 ruby lib
 
 Gem::Specification.new do |s|
-  s.name = "code_climate_project_metrics"
-  s.version = "0.0.2"
+  s.name = "project_metric_code_climate"
+  s.version = "0.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
@@ -11,11 +11,11 @@ Gem::Specification.new do |s|
   s.date = "2016-07-21"
   s.description = "Project metrics from code climate"
   s.email = "sam@agileventues.org"
-  s.files = ["lib/code_climate_project_metrics.rb"]
-  s.homepage = "https://github.com/AgileVentures/code_climate_project_metrics"
+  s.files = ["lib/project_metric_code_climate.rb"]
+  s.homepage = "https://github.com/AgileVentures/project_metric_code_climate"
   s.licenses = ["MIT"]
   s.rubygems_version = "2.5.1"
-  s.summary = "CodeClimateProjectMetrics"
+  s.summary = "ProjectMetricCodeClimate"
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
