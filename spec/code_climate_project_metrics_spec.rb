@@ -33,6 +33,7 @@ describe ProjectMetricCodeClimate do
     it 'uses raw data set with setter of 3.5 rather than network' do
       code_climate_project_metrics.raw_data = raw_data_three_point_five
       expect(code_climate_project_metrics.score).to eq 3.5
+      expect(code_climate_project_metrics.raw_data).to eq raw_data_three_point_five
     end
 
     it 'uses raw data set with setter of 3.5 rather than network after score has already been computed once before' do

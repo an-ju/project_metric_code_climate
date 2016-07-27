@@ -2,6 +2,9 @@ require 'httparty'
 require 'byebug'
 
 class ProjectMetricCodeClimate
+
+  attr_reader :raw_data
+
   def initialize credentials = {}, raw_data = nil
     @identifier = "github#{URI::parse(credentials[:url]).path}"
     @raw_data = raw_data
