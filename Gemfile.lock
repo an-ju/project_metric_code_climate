@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    byebug (9.0.5)
     diff-lcs (1.2.5)
     httparty (0.13.7)
       json (~> 1.8)
@@ -25,6 +26,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  byebug
   httparty
   rspec
 
