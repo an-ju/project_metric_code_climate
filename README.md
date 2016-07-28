@@ -3,14 +3,17 @@ Code Climate Project Metrics
 
 Defines scalar and image for CodeClimate Project Metrics
 
-Gemfile:
 
- ```rb
+```rb
+ # Gemfile
+
  gem 'project_metric_code_climate', git: 'https://github.com/AgileVentures/project_metric_code_climate'
  gem 'project_metrics', git: 'https://github.com/AgileVentures/ProjectMetrics/'
 ```
-main.rb: 
+
 ```rb
+# main.rb
+
 require 'project_metrics'
 ProjectMetrics.configure do 
   add_metric :project_metric_code_climate
@@ -48,3 +51,9 @@ And we're back to live data of 3.5
 ```rb
 sample_point.score # => 3.5
 ```
+
+TODO
+----
+
+* [ ] make sure that image uses raw_data 
+* [ ] could refactor code to memo-ize raw_data reader
