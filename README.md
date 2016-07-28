@@ -57,3 +57,4 @@ TODO
 
 * [ ] make sure that image uses raw_data 
 * [ ] could refactor code to memo-ize raw_data reader
+* [ ] handling network errors - just let them propogate up?
