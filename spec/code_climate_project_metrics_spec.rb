@@ -6,7 +6,7 @@ describe ProjectMetricCodeClimate, :vcr do
 
   context 'AgileVentures/WebsiteOne repo' do
     subject(:code_climate_project_metrics) do
-      described_class.new url: 'http://github.com/AgileVentures/WebsiteOne'
+      described_class.new url: 'https://github.com/AgileVentures/WebsiteOne'
     end
 
     it 'has the corresponding score value' do
@@ -20,7 +20,7 @@ describe ProjectMetricCodeClimate, :vcr do
 
   context 'AgileVentures/LocalSupport repo' do
     subject(:code_climate_project_metrics) do
-      described_class.new url: 'http://github.com/AgileVentures/LocalSupport'
+      described_class.new url: 'https://github.com/AgileVentures/LocalSupport'
     end
 
     it 'has the corresponding score value' do
