@@ -10,6 +10,7 @@ GEM
     httparty (0.14.0)
       multi_xml (>= 0.5.2)
     multi_xml (0.5.5)
+    rake (11.2.2)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -36,6 +37,7 @@ PLATFORMS
 DEPENDENCIES
   byebug
   httparty
+  rake
   rspec
   vcr
   webmock
