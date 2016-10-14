@@ -52,6 +52,11 @@ And we're back to live data of 3.5
 sample_point.score # => 3.5
 ```
 
+Required Configuration Variable
+-------------------------------
+
+- url: URL of the GitHub repository.
+
 TODO
 ----
 
