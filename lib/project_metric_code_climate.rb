@@ -5,7 +5,7 @@ class ProjectMetricCodeClimate
   attr_reader :raw_data
 
   def initialize credentials = {}, raw_data = nil
-    @identifier = "github#{URI::parse(credentials[:url]).path}"
+    @identifier = "github#{URI::parse(credentials[:github_project]).path}"
     @raw_data = raw_data
   end
 
@@ -38,6 +38,10 @@ class ProjectMetricCodeClimate
     raw_data = page.css('div.repos-show__overview-summary-number')
     data_hash = {'GPA' => raw_data[0].text[/\d.+/], 'issues' => raw_data[1].text[/\d+/], 'coverage' => raw_data[2].text[/\d+/]}
     data_hash.to_json
+  end
+
+  def self.credentials
+    %I[github_project]
   end
 
   private 
