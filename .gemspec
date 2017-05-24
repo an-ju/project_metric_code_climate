@@ -21,23 +21,23 @@ Gem::Specification.new do |s|
     s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<httparty>, [">= 0"])
       s.add_development_dependency(%q<rspec>, ["= 3.4"])
       s.add_development_dependency(%q<vcr>, [">= 0"])
       s.add_development_dependency(%q<webmock>, [">= 0"])
       s.add_development_dependency(%q<byebug>, [">= 0"])
     else
-      s.add_dependency(%q<httparty>, [">= 0"])
       s.add_dependency(%q<rspec>, ["= 3.4"])
       s.add_dependency(%q<vcr>, [">= 0"])
       s.add_dependency(%q<webmock>, [">= 0"])
       s.add_dependency(%q<byebug>, [">= 0"])
     end
   else
-    s.add_dependency(%q<httparty>, [">= 0"])
     s.add_dependency(%q<rspec>, ["= 3.4"])
     s.add_dependency(%q<vcr>, [">= 0"])
     s.add_dependency(%q<webmock>, [">= 0"])
     s.add_dependency(%q<byebug>, [">= 0"])
+    s.add_dependency 'nokogiri'
+    s.add_dependency 'open-uri'
+    s.add_dependency 'json'
   end
 end
