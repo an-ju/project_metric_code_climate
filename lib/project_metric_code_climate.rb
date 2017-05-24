@@ -7,7 +7,7 @@ class ProjectMetricCodeClimate
   attr_reader :raw_data
 
   def initialize credentials = {}, raw_data = nil
-    @identifier = "github/#{URI::parse(credentials[:github_project]).path}"
+    @identifier = "github#{URI::parse(credentials[:github_project]).path}"
     @raw_data = raw_data
   end
 
