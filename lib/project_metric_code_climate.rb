@@ -18,7 +18,7 @@ class ProjectMetricCodeClimate
 
   def score
     @raw_data ||= remote_data
-    @score ||= @raw_data['GPA']
+    @score ||= @raw_data[:GPA]
   end
 
   def raw_data=(new)
