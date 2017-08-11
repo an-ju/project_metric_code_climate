@@ -2,13 +2,10 @@ source 'https://rubygems.org'
 
 ruby '2.3.1'
 
+gem 'faraday', '~>0.12.0'
+
 gem 'httparty'
 gem 'rake'
-
-gem 'nokogiri'
-gem 'rubygems'
-gem 'open-uri'
-gem "json"
 
 group :test do
   gem 'rspec'

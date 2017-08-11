@@ -1,24 +1,31 @@
-require 'nokogiri'
+require 'faraday'
 require 'open-uri'
+require 'date'
 require 'json'
 
 class ProjectMetricCodeClimate
 
   attr_reader :raw_data
 
-  def initialize credentials = {}, raw_data = nil
-    @identifier = "github#{URI::parse(credentials[:github_project]).path}"
+  def initialize(credentials = {}, raw_data = nil)
+    @project_url = credentials[:github_project]
+    @identifier = URI.parse(@project_url).path[1..-1]
+
+    @conn = Faraday.new(url: 'https://api.codeclimate.com/v1')
+    @conn.headers['Content-Type'] = 'application/vnd.api+json'
+    @conn.headers['Authorization'] = "Token token=#{credentials[:codeclimate_token]}"
+    set_project_id
     @raw_data = raw_data
   end
 
   def image
-    @raw_data ||= remote_data
-    @image ||= { chartType: 'code_climate', data: @raw_data, titleText: 'Code Climate GPA' }.to_json
+    @raw_data ||= gpa
+    @image ||= { chartType: 'code_climate', data: @raw_data['data'], titleText: 'Code Climate GPA' }.to_json
   end
 
   def score
-    @raw_data ||= remote_data
-    @score ||= @raw_data[:GPA]
+    @raw_data ||= gpa
+    @score ||= @raw_data['data']['attributes']['points'].last['value']
   end
 
   def raw_data=(new)
@@ -27,26 +34,25 @@ class ProjectMetricCodeClimate
   end
 
   def refresh
-    @raw_data = remote_data
+    @raw_data = gpa
     @score = @image = nil
     true
   end
 
   def self.credentials
-    %I[github_project]
+    %I[github_project codeclimate_token]
   end
 
-  private 
+  private
 
-  def remote_data
-    page = Nokogiri::HTML(open("https://codeclimate.com/#{@identifier}"))
-    # page = Nokogiri::HTML(open("https://codeclimate.com/github/hrzlvn/coursequestionbank"))
+  def set_project_id
+    @project_id = JSON.parse(@conn.get("repos?github_slug=#{@identifier}").body)['data'][0]['id']
+  end
 
-    raw_data = page.css('div.repos-show__overview-summary-number')
-    gpa = raw_data[0].nil? ? -1 : raw_data[0].text[/\d.+/]
-    issues = raw_data[1].nil? ? -1 : raw_data[1].text[/\d+/]
-    coverage = raw_data[2].nil? ? -1 : raw_data[2].text[/\d+/]
-    { GPA: gpa, issues: issues, coverage: coverage }
+  def gpa
+    end_date = Date.today.strftime '%Y-%m-%d'
+    start_date = (Date.today - 7).strftime '%Y-%m-%d'
+    JSON.parse(@conn.get("repos/#{@project_id}/metrics/gpa?filter[from]=#{start_date}&filter[to]=#{end_date}").body)
   end
 
 end
