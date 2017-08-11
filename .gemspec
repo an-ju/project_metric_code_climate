@@ -36,8 +36,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<vcr>, [">= 0"])
     s.add_dependency(%q<webmock>, [">= 0"])
     s.add_dependency(%q<byebug>, [">= 0"])
-    s.add_dependency 'nokogiri'
-    s.add_dependency 'open-uri'
-    s.add_dependency 'json'
   end
+  s.add_dependency 'faraday'
 end
