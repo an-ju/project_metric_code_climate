@@ -20,7 +20,7 @@ class ProjectMetricCodeClimate
 
   def image
     @raw_data ||= gpa
-    @image ||= { chartType: 'code_climate', data: @raw_data['data'], titleText: 'Code Climate GPA' }.to_json
+    @image ||= { chartType: 'code_climate_v2', data: @raw_data['data'], titleText: 'Code Climate GPA' }.to_json
   end
 
   def score
