@@ -26,7 +26,7 @@ class ProjectMetricCodeClimate
     @image ||= { chartType: 'code_climate_v2',
                  titleText: 'Code Climate GPA',
                  data: {
-                   test_cov_badge: open(badge_link).read,
+                   maint_badge: open(badge_link).read,
                    gpa: p['attributes']['score']
                  } }.to_json
   end
