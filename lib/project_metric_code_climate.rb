@@ -21,19 +21,19 @@ class ProjectMetricCodeClimate
 
   def image
     @raw_data ||= project
-    p = project['data'].last
+    p = @raw_data['data'].last
     badge_link = p['links']['maintainability_badge']
     @image ||= { chartType: 'code_climate_v2',
                  titleText: 'Code Climate GPA',
                  data: {
-                   maint_badge: open(badge_link).read,
+                   test_cov_badge: open(badge_link).read,
                    gpa: p['attributes']['score']
                  } }.to_json
   end
 
   def score
     @raw_data ||= project
-    p = project['data'].last
+    p = @raw_data['data'].last
     @score ||= p['attributes']['score'].nil? ? -1 : p['attributes']['score']
   end
 
