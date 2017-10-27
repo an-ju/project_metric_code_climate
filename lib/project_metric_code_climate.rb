@@ -6,6 +6,7 @@ require 'json'
 class ProjectMetricCodeClimate
 
   attr_reader :raw_data
+  attr_reader :conn
 
   def initialize(credentials = {}, raw_data = nil)
     @project_url = credentials[:github_project]
@@ -19,13 +20,21 @@ class ProjectMetricCodeClimate
   end
 
   def image
-    @raw_data ||= gpa
-    @image ||= { chartType: 'code_climate_v2', data: @raw_data['data'], titleText: 'Code Climate GPA' }.to_json
+    @raw_data ||= project
+    p = project['data'].last
+    badge_link = p['links']['maintainability_badge']
+    @image ||= { chartType: 'code_climate_v2',
+                 titleText: 'Code Climate GPA',
+                 data: {
+                   maint_badge: open(badge_link).read,
+                   gpa: p['attributes']['score']
+                 } }.to_json
   end
 
   def score
-    @raw_data ||= gpa
-    @score ||= @raw_data['data']['attributes']['points'].last['value']
+    @raw_data ||= project
+    p = project['data'].last
+    @score ||= p['attributes']['score'].nil? ? -1 : p['attributes']['score']
   end
 
   def raw_data=(new)
@@ -34,7 +43,7 @@ class ProjectMetricCodeClimate
   end
 
   def refresh
-    @raw_data = gpa
+    @raw_data = project
     @score = @image = nil
     true
   end
@@ -45,15 +54,7 @@ class ProjectMetricCodeClimate
 
   private
 
-  def set_project_id
-    @project_id = JSON.parse(@conn.get("repos?github_slug=#{@identifier}").body)['data'][0]['id']
+  def project
+    JSON.parse(@conn.get("repos?github_slug=#{@identifier}").body)
   end
-
-  def gpa
-    set_project_id
-    end_date = Date.today.strftime '%Y-%m-%d'
-    start_date = (Date.today - 7).strftime '%Y-%m-%d'
-    JSON.parse(@conn.get("repos/#{@project_id}/metrics/gpa?filter[from]=#{start_date}&filter[to]=#{end_date}").body)
-  end
-
 end
