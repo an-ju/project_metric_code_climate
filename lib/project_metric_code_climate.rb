@@ -14,7 +14,7 @@ class ProjectMetricCodeClimate
     @conn = Faraday.new(url: 'https://api.codeclimate.com/v1')
     @conn.headers['Content-Type'] = 'application/vnd.api+json'
     @conn.headers['Authorization'] = "Token token=#{credentials[:codeclimate_token]}"
-    set_project_id
+
     @raw_data = raw_data
   end
 
@@ -50,6 +50,7 @@ class ProjectMetricCodeClimate
   end
 
   def gpa
+    set_project_id
     end_date = Date.today.strftime '%Y-%m-%d'
     start_date = (Date.today - 7).strftime '%Y-%m-%d'
     JSON.parse(@conn.get("repos/#{@project_id}/metrics/gpa?filter[from]=#{start_date}&filter[to]=#{end_date}").body)
