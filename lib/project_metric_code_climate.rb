@@ -7,6 +7,7 @@ class ProjectMetricCodeClimate
 
   attr_reader :raw_data
   attr_reader :conn
+  attr_reader :p
 
   def initialize(credentials = {}, raw_data = nil)
     @project_url = credentials[:github_project]
@@ -20,21 +21,33 @@ class ProjectMetricCodeClimate
   end
 
   def image
-    @raw_data ||= project
-    p = @raw_data['data'].last
-    badge_link = p['links']['maintainability_badge']
+    set_project
+    @raw_data ||= snapdata ref_points['data'].first
+    badge_link = @p['links']['maintainability_badge']
+    if @raw_data['data']['attributes']['ratings'].empty?
+      measure = @raw_data['data']['attributes']['gpa']
+    else
+      measure = 100.0 - @raw_data['data']['attributes']['ratings'].first['measure']['value']
+    end
+
     @image ||= { chartType: 'code_climate_v2',
                  titleText: 'Code Climate GPA',
                  data: {
                    maint_badge: open(badge_link).read,
-                   gpa: p['attributes']['score']
+                   measure: measure,
+                   gpa: @p['attributes']['score']
                  } }.to_json
   end
 
   def score
-    @raw_data ||= project
-    p = @raw_data['data'].last
-    @score ||= p['attributes']['score'].nil? ? -1 : p['attributes']['score']
+    set_project
+    @raw_data ||= snapdata ref_points['data'].first
+    if @raw_data['data']['attributes']['ratings'].empty?
+      measure = @raw_data['data']['attributes']['gpa']
+    else
+      measure = 100.0 - @raw_data['data']['attributes']['ratings'].first['measure']['value']
+    end
+    @score ||= measure
   end
 
   def raw_data=(new)
@@ -43,7 +56,7 @@ class ProjectMetricCodeClimate
   end
 
   def refresh
-    @raw_data = project
+    @raw_data = snapdata ref_points['data'].first
     @score = @image = nil
     true
   end
@@ -54,7 +67,17 @@ class ProjectMetricCodeClimate
 
   private
 
-  def project
-    JSON.parse(@conn.get("repos?github_slug=#{@identifier}").body)
+  def set_project
+    resp = JSON.parse(@conn.get("repos?github_slug=#{@identifier}").body)
+    @p = resp['data'].last
+  end
+
+  def ref_points
+    JSON.parse(@conn.get("repos/#{@p['id']}/ref_points").body)
+  end
+
+  def snapdata(ref)
+    snapshot = ref['relationships']['snapshot']['data']
+    JSON.parse(@conn.get("repos/#{@p['id']}/snapshots/#{snapshot['id']}").body)
   end
 end
