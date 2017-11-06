@@ -56,6 +56,7 @@ class ProjectMetricCodeClimate
   end
 
   def refresh
+    set_project
     @raw_data = snapdata ref_points['data'].first
     @score = @image = nil
     true
