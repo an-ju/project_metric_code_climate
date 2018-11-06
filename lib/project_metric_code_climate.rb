@@ -1,8 +1,14 @@
+# frozen_string_literal: true
+
+require 'project_metric_code_climate/version'
+require 'project_metric_code_climate/test_generator'
+
 require 'faraday'
 require 'open-uri'
 require 'date'
 require 'json'
 
+# The main class
 class ProjectMetricCodeClimate
 
   attr_reader :raw_data
@@ -21,33 +27,24 @@ class ProjectMetricCodeClimate
   end
 
   def image
-    set_project
-    @raw_data ||= snapdata ref_points['data'].first
-    badge_link = @p['links']['maintainability_badge']
-    if @raw_data['data']['attributes']['ratings'].empty?
-      measure = @raw_data['data']['attributes']['gpa']
-    else
-      measure = 100.0 - @raw_data['data']['attributes']['ratings'].first['measure']['value']
-    end
+    refresh unless @raw_data
 
-    @image ||= { chartType: 'code_climate_v2',
-                 titleText: 'Code Climate GPA',
-                 data: {
-                   maint_badge: open(badge_link).read,
-                   measure: measure,
-                   gpa: @p['attributes']['score']
-                 } }.to_json
+    { chartType: 'code_climate',
+      data: { ratings: @snapshot['attributes']['ratings'],
+              meta: @snapshot['meta'],
+              issue_link: @p['links']['web_issues'] } }.to_json
   end
 
   def score
-    set_project
-    @raw_data ||= snapdata ref_points['data'].first
-    if @raw_data['data']['attributes']['ratings'].empty?
-      measure = @raw_data['data']['attributes']['gpa']
-    else
-      measure = 100.0 - @raw_data['data']['attributes']['ratings'].first['measure']['value']
-    end
-    @score ||= measure
+    refresh unless @raw_data
+
+    100.0 - maintainability['measure']['value']
+  end
+
+  def commit_sha
+    refresh unless @raw_data
+
+    @snapshot['attributes']['commit_sha']
   end
 
   def raw_data=(new)
@@ -57,7 +54,8 @@ class ProjectMetricCodeClimate
 
   def refresh
     set_project
-    @raw_data = snapdata ref_points['data'].first
+    set_snapshot
+    @raw_data = { project: @p, snapshot: @snapshot }.to_json
     @score = @image = nil
     true
   end
@@ -69,16 +67,17 @@ class ProjectMetricCodeClimate
   private
 
   def set_project
+    # Collect project information from code climate.
     resp = JSON.parse(@conn.get("repos?github_slug=#{@identifier}").body)
     @p = resp['data'].last
   end
 
-  def ref_points
-    JSON.parse(@conn.get("repos/#{@p['id']}/ref_points").body)
+  def set_snapshot
+    snapshot_id = @p['relationships']['latest_default_branch_snapshot']['data']['id']
+    @snapshot = JSON.parse(@conn.get("repos/#{@p['id']}/snapshots/#{snapshot_id}").body)['data']
   end
 
-  def snapdata(ref)
-    snapshot = ref['relationships']['snapshot']['data']
-    JSON.parse(@conn.get("repos/#{@p['id']}/snapshots/#{snapshot['id']}").body)
+  def maintainability
+    @snapshot['attributes']['ratings'].select { |elem| elem['pillar'].eql? 'Maintainability' }.first
   end
 end

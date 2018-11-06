@@ -7,13 +7,15 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
-  s.authors = ["Sam Joseph"]
+  s.authors = ["Sam Joseph", 'An Ju']
   s.date = "2016-07-21"
   s.description = "Project metrics from code climate"
-  s.email = "sam@agileventues.org"
-  s.files = ["lib/project_metric_code_climate.rb"]
-  s.homepage = "https://github.com/AgileVentures/project_metric_code_climate"
+  s.email = "an_ju@berkeley.edu"
+  s.homepage = "https://github.com/an-ju/project_metric_code_climate"
   s.licenses = ["MIT"]
+  s.files = ['lib/project_metric_code_climate.rb',
+             'lib/project_metric_code_climate/version.rb',
+             'lib/project_metric_code_climate/test_generator.rb']
   s.rubygems_version = "2.5.1"
   s.summary = "ProjectMetricCodeClimate"
 

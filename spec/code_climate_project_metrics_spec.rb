@@ -1,64 +1,45 @@
-require 'project_metric_code_climate' 
+require 'project_metric_code_climate'
 
-describe ProjectMetricCodeClimate, :vcr do
+describe ProjectMetricCodeClimate do
 
-  let(:raw_data_three_point_five) { File.read './spec/data/code_climate_3_5_image.svg' }
+  before :each do
+    @conn = double('conn')
+    project_resp = double('project')
+    allow(project_resp).to receive(:body) { File.read './spec/data/project.json' }
+    snapshot_resp = double('snapshot')
+    allow(snapshot_resp).to receive(:body) { File.read './spec/data/snapshot.json' }
 
-  context 'AgileVentures/WebsiteOne repo' do
+    allow(Faraday).to receive(:new).and_return(@conn)
+    allow(@conn).to receive(:headers).and_return({})
+    allow(@conn).to receive(:get).with('repos?github_slug=an-ju/teamscope').and_return(project_resp)
+    allow(@conn).to receive(:get).with('repos/696a76232df2736347000001/snapshots/596a762c9373ca000100177e').and_return(snapshot_resp)
+  end
+
+  context 'it should generate data correctly' do
     subject(:code_climate_project_metrics) do
-      described_class.new url: 'https://github.com/AgileVentures/WebsiteOne'
+      described_class.new(github_project: 'https://github.com/an-ju/teamscope', code_climate_token: 'token')
     end
 
     it 'has the corresponding score value' do
-      expect(code_climate_project_metrics.score).to eq 3.5
+      expect(code_climate_project_metrics.score).to eq(100.0-3.0210800735343)
     end
 
     it 'has the proper image url' do
-      expect(code_climate_project_metrics.image).to eq 'https://codeclimate.com/github/AgileVentures/WebsiteOne/badges/gpa.svg'
+      image = JSON.parse(code_climate_project_metrics.image)
+      expect(image).to have_key('data')
+      expect(image['data']).to have_key('ratings')
+      expect(image['data']['ratings'].length).to eql(1)
+    end
+
+    it 'has the proper commit_sha' do
+      expect(code_climate_project_metrics.commit_sha).to eql('db36165a645accc5ac78d3c70dffffa4aef7d8a2')
     end
   end
 
-  context 'AgileVentures/LocalSupport repo' do
-    subject(:code_climate_project_metrics) do
-      described_class.new url: 'https://github.com/AgileVentures/LocalSupport'
-    end
 
-    it 'has the corresponding score value' do
-      expect(code_climate_project_metrics.score).to eq 3.2
-    end
-
-    it 'has the proper image url' do
-      expect(code_climate_project_metrics.image).to eq 'https://codeclimate.com/github/AgileVentures/LocalSupport/badges/gpa.svg'
-    end
-
-    it 'uses raw data set with setter of 3.5 rather than network' do
-      code_climate_project_metrics.raw_data = raw_data_three_point_five
-      expect(code_climate_project_metrics.score).to eq 3.5
-      expect(code_climate_project_metrics.raw_data).to eq raw_data_three_point_five
-    end
-
-    it 'uses raw data set with setter of 3.5 rather than network after score has already been computed once before' do
-      code_climate_project_metrics.raw_data = raw_data_three_point_five
-      expect(code_climate_project_metrics.score).to eq 3.5
-    end
-
-    it 'uses new network data of 3.5 after score has been computed once' do
-      expect(HTTParty).to receive(:get).with('https://codeclimate.com/github/AgileVentures/LocalSupport/badges/gpa.svg').and_return double('response', body: raw_data_three_point_five)
-      expect(code_climate_project_metrics.refresh).to be true
-      expect(code_climate_project_metrics.score).to eq 3.5
-    end
-
-    context 'with raw data in initialize' do
-
-      subject(:code_climate_project_metrics) do
-        described_class.new({ url: 'http://github.com/AgileVentures/LocalSupport' }, raw_data_three_point_five)
-      end
-
-      it 'uses raw data 3.5 gpa rather than network' do
-        expect(code_climate_project_metrics.score).to eq 3.5
-      end
-
+  context 'it should generate fake data' do
+    it 'generates three fake data' do
+      expect(ProjectMetricCodeClimate.fake_data.length).to eql(3)
     end
   end
-
 end
