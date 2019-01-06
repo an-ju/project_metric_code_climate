@@ -8,12 +8,14 @@ require 'open-uri'
 require 'date'
 require 'json'
 
+require 'project_metric_base'
+
 # The main class
 class ProjectMetricCodeClimate
+  include ProjectMetricBase
 
-  attr_reader :raw_data
-  attr_reader :conn
-  attr_reader :p
+  add_credentials %I[github_project codeclimate_token]
+  add_raw_data %I[codeclimate_project codeclimate_snapshot]
 
   def initialize(credentials = {}, raw_data = nil)
     @project_url = credentials[:github_project]
@@ -23,61 +25,38 @@ class ProjectMetricCodeClimate
     @conn.headers['Content-Type'] = 'application/vnd.api+json'
     @conn.headers['Authorization'] = "Token token=#{credentials[:codeclimate_token]}"
 
-    @raw_data = raw_data
+    self.raw_data = raw_data
   end
 
   def image
-    refresh unless @raw_data
-
     { chartType: 'code_climate',
-      data: { ratings: @snapshot['attributes']['ratings'],
-              meta: @snapshot['meta'],
-              issue_link: @p['links']['web_issues'] } }.to_json
+      data: { ratings: @codeclimate_snapshot['attributes']['ratings'],
+              meta: @codeclimate_snapshot['meta'],
+              issue_link: @codeclimate_project['links']['web_issues'] } }
   end
 
   def score
-    refresh unless @raw_data
-
     100.0 - maintainability['measure']['value']
   end
 
-  def commit_sha
-    refresh unless @raw_data
-
-    @snapshot['attributes']['commit_sha']
-  end
-
-  def raw_data=(new)
-    @raw_data = new
-    @score = @image = nil
-  end
-
-  def refresh
-    set_project
-    set_snapshot
-    @raw_data = { project: @p, snapshot: @snapshot }.to_json
-    @score = @image = nil
-    true
-  end
-
-  def self.credentials
-    %I[github_project codeclimate_token]
+  def obj_id
+    @codeclimate_snapshot['attributes']['commit_sha']
   end
 
   private
 
-  def set_project
+  def codeclimate_project
     # Collect project information from code climate.
     resp = JSON.parse(@conn.get("repos?github_slug=#{@identifier}").body)
-    @p = resp['data'].last
+    @codeclimate_project = resp['data'].last
   end
 
-  def set_snapshot
-    snapshot_id = @p['relationships']['latest_default_branch_snapshot']['data']['id']
-    @snapshot = JSON.parse(@conn.get("repos/#{@p['id']}/snapshots/#{snapshot_id}").body)['data']
+  def codeclimate_snapshot
+    snapshot_id = @codeclimate_project['relationships']['latest_default_branch_snapshot']['data']['id']
+    @codeclimate_snapshot = JSON.parse(@conn.get("repos/#{@codeclimate_project['id']}/snapshots/#{snapshot_id}").body)['data']
   end
 
   def maintainability
-    @snapshot['attributes']['ratings'].select { |elem| elem['pillar'].eql? 'Maintainability' }.first
+    @codeclimate_snapshot['attributes']['ratings'].select { |elem| elem['pillar'].eql? 'Maintainability' }.first
   end
 end
