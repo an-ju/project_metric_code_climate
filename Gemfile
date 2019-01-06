@@ -1,18 +1,6 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-ruby '2.3.1'
+git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
-gem 'faraday', '~>0.12.0'
-
-gem 'httparty'
-gem 'rake'
-
-group :test do
-  gem 'rspec'
-  gem 'vcr'
-  gem 'webmock'
-end
-
-group :development, :test do
-  gem 'byebug'
-end
+gemspec
+gem 'project_metric_base', git: 'https://github.com/an-ju/project_metric_base'
