@@ -8,8 +8,8 @@ class ProjectMetricCodeClimate
   end
 
   def self._test_image(value)
-    { chartType: 'code_climate',
-      data:
+    {chartType: 'code_climate',
+     fixtures:
           { ratings:
                 [{ letter: _test_letter(value),
                    path: '/',
