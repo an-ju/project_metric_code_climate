@@ -15,7 +15,7 @@ class ProjectMetricCodeClimate
   include ProjectMetricBase
 
   add_credentials %I[github_project codeclimate_token]
-  add_raw_data %I[codeclimate_project codeclimate_snapshot]
+  add_raw_data %w[codeclimate_project codeclimate_snapshot]
 
   def initialize(credentials = {}, raw_data = nil)
     @project_url = credentials[:github_project]
