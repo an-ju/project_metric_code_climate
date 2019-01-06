@@ -48,6 +48,5 @@ describe ProjectMetricCodeClimate do
       expect(image_data[:chartType]).to be_a(String)
       expect(image_data[:data]).to be_a(Hash)
     end
-
   end
 end

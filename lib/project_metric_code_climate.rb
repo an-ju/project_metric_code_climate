@@ -25,7 +25,7 @@ class ProjectMetricCodeClimate
     @conn.headers['Content-Type'] = 'application/vnd.api+json'
     @conn.headers['Authorization'] = "Token token=#{credentials[:codeclimate_token]}"
 
-    self.raw_data = raw_data
+    complete_with raw_data
   end
 
   def image
