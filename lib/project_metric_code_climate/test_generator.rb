@@ -8,8 +8,8 @@ class ProjectMetricCodeClimate
   end
 
   def self._test_image(value)
-    {chartType: 'code_climate',
-     fixtures:
+    { chartType: 'code_climate',
+      data:
           { ratings:
                 [{ letter: _test_letter(value),
                    path: '/',
@@ -27,7 +27,7 @@ class ProjectMetricCodeClimate
                             {
                                 value: value,
                                 unit: "percent" } } },
-            issue_link: 'https://codeclimate.com/github/an-ju/projectscope/issues' } }.to_json
+            issue_link: 'https://codeclimate.com/github/an-ju/projectscope/issues' } }
   end
 
   def self._test_letter(value)

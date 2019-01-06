@@ -42,5 +42,12 @@ describe ProjectMetricCodeClimate do
       expect(data_item).to have_key(:image)
     end
 
+    it 'sets image properly' do
+      image_data = described_class.fake_data.first[:image]
+      expect(image_data).to be_a(Hash)
+      expect(image_data[:chartType]).to be_a(String)
+      expect(image_data[:data]).to be_a(Hash)
+    end
+
   end
 end
