@@ -29,6 +29,10 @@ class ProjectMetricCodeClimate
   end
 
   def image
+    if @codeclimate_project.nil?
+      return { chartType: 'error_message',
+               message: "Cannot find project #{@identifier}." }
+    end
     { chartType: 'code_climate',
       data: { ratings: @codeclimate_snapshot['attributes']['ratings'],
               meta: @codeclimate_snapshot['meta'],
@@ -36,6 +40,8 @@ class ProjectMetricCodeClimate
   end
 
   def score
+    return -1 if @codeclimate_project.nil?
+
     100.0 - maintainability['measure']['value']
   end
 
@@ -52,6 +58,11 @@ class ProjectMetricCodeClimate
   end
 
   def codeclimate_snapshot
+    if @codeclimate_project.nil?
+      @codeclimate_snapshot = nil
+      return
+    end
+
     snapshot_id = @codeclimate_project['relationships']['latest_default_branch_snapshot']['data']['id']
     @codeclimate_snapshot = JSON.parse(@conn.get("repos/#{@codeclimate_project['id']}/snapshots/#{snapshot_id}").body)['data']
   end
